@@ -16,12 +16,37 @@ const rules: RuleDefinition[] = [
     path: "second-input",
     value: "foo",
   },
+  { type: "subject", id: "4", path: "second-input" },
+  { type: "and", id: "6", parentId: "4" },
+  {
+    type: "equals",
+    id: "7",
+    parentId: "6",
+    path: "first-select",
+    value: "Second",
+  },
+  {
+    type: "equals",
+    id: "8",
+    parentId: "6",
+    path: "first-input",
+    value: "bar",
+  },
 ];
 function App() {
   return (
     <>
       <div>
-        <div></div>
+        <div>
+          <h2>Dynamic rules</h2>
+          <ul>
+            <li>first-input is required if second-input value == foo</li>
+            <li>
+              second-input is required if first-select value == Second AND
+              first-input == bar
+            </li>
+          </ul>
+        </div>
         <FormContextProvider rules={rules} formDefinitions={definitions}>
           <Form formDefinitions={definitions} />
         </FormContextProvider>

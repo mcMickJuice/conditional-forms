@@ -90,22 +90,19 @@ export const Form = ({
   } = useFormContext();
   return (
     <div>
-      <h1>Form</h1>
-      <div>
-        {formDefinitions.map((def) => {
-          const isRequired = requireState[def.path];
-          return (
-            <div key={def.path}>
-              <InputRenderer
-                definition={def}
-                value={formValues[def.path]}
-                onChange={onChangeHandler}
-                isRequired={isRequired}
-              />
-            </div>
-          );
-        })}
-      </div>
+      {formDefinitions.map((def) => {
+        const isRequired = requireState[def.path];
+        return (
+          <div key={def.path}>
+            <InputRenderer
+              definition={def}
+              value={formValues[def.path]}
+              onChange={onChangeHandler}
+              isRequired={isRequired}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 };
