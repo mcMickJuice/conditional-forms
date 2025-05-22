@@ -15,6 +15,7 @@ const TextInput = ({
   const requiredClass = required && !value ? "required" : "";
   return (
     <>
+      <label>{path}</label>
       <input
         value={value ?? ""}
         className={requiredClass}
@@ -56,6 +57,7 @@ const SelectInput = ({
   const requiredClass = required && !value ? "required" : "";
   return (
     <>
+      <label>{path}</label>
       <select
         className={requiredClass}
         onChange={(evt) => {
