@@ -1,8 +1,7 @@
 import "./App.css";
 import { Form } from "./Form";
 import { FormContextProvider } from "./FormProvider";
-import type { RuleDefinition } from "./rules-engine";
-import type { FormDefinition } from "./types";
+import type { FormDefinition, RuleDefinition } from "./types";
 const definitions: FormDefinition[] = [
   { type: "text", path: "first-input" },
   { type: "text", path: "second-input" },
