@@ -65,40 +65,16 @@ export type Predicate =
 export type And = AndDefinition & { predicates: Predicate[] };
 export type Or = OrDefinition & { predicates: Predicate[] };
 
-const subject: Subject = {
-  id: "subj",
-  path: "first-input",
-  predicate: {
-    id: "or",
-    parentId: "subj",
-    type: "or",
-    predicates: [
-      {
-        id: "other-eq",
-        type: "comparison",
-        path: "number",
-        parentId: "or",
-        comparisonType: ">",
-        value: 10,
-      },
-      {
-        id: "eq",
-        type: "equals",
-        parentId: "or",
-        path: "second-input",
-        value: "foo",
-      },
-    ],
-  },
-};
-type FormValue = { path: string; value: any };
-function processRulesForSubject(
-  formValues: FormValue[],
+export function processRulesForSubject(
+  formValues: Record<string, string>,
   rule: Subject,
 ): boolean {
   return processRule(formValues, rule.predicate);
 }
-function processRule(formValues: FormValue[], predicate: Predicate): boolean {
+function processRule(
+  formValues: Record<string, any>,
+  predicate: Predicate,
+): boolean {
   if (predicate.type === "and") {
     return predicate.predicates.every((pred) => processRule(formValues, pred));
   }
@@ -106,26 +82,26 @@ function processRule(formValues: FormValue[], predicate: Predicate): boolean {
     return predicate.predicates.some((pred) => processRule(formValues, pred));
   }
 
-  const formValue = formValues.find((fv) => fv.path === predicate.path);
+  const formValue = formValues[predicate.path];
   if (!formValue) {
     // this should not throw, instead it should set a default value???
-    throw new Error("form value not found shoot!");
+    return false;
   }
 
   if (predicate.type === "equals") {
-    if (predicate.negation) return predicate.value !== formValue.value;
-    return predicate.value === formValue.value;
+    if (predicate.negation) return predicate.value !== formValue;
+    return predicate.value === formValue;
   }
   if (predicate.type === "comparison") {
     switch (predicate.comparisonType) {
       case "<":
-        return formValue.value < predicate.value;
+        return formValue < predicate.value;
       case "<=":
-        return formValue.value <= predicate.value;
+        return formValue <= predicate.value;
       case ">":
-        return formValue.value > predicate.value;
+        return formValue > predicate.value;
       case ">=":
-        return formValue.value >= predicate.value;
+        return formValue >= predicate.value;
       default:
         return false;
     }

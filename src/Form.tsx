@@ -59,7 +59,11 @@ const SelectInput = ({
   );
 };
 
-export const Form = ({ definitions }: { definitions: FormDefinition[] }) => {
+export const Form = ({
+  formDefinitions,
+}: {
+  formDefinitions: FormDefinition[];
+}) => {
   // bind onChange with context provider
   // get value from context provider
   // get required from context provider
@@ -68,7 +72,7 @@ export const Form = ({ definitions }: { definitions: FormDefinition[] }) => {
     <div>
       <h1>Form</h1>
       <div>
-        {definitions.map((def) => {
+        {formDefinitions.map((def) => {
           return (
             <div key={def.path}>
               <InputRenderer
