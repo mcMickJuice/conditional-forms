@@ -5,19 +5,26 @@ const TextInput = ({
   value,
   path,
   onChange,
+  required,
 }: {
   value: string | undefined;
   path: string;
+  required: boolean;
   onChange: (path: string, value: string) => void;
 }) => {
+  const requiredClass = required && !value ? "required" : "";
   return (
-    <input
-      value={value ?? ""}
-      onChange={(evt) => {
-        const { value } = evt.target;
-        onChange(path, value);
-      }}
-    />
+    <>
+      <input
+        value={value ?? ""}
+        className={requiredClass}
+        onChange={(evt) => {
+          const { value } = evt.target;
+          onChange(path, value);
+        }}
+      />
+      {required && <span>REQUIRED</span>}
+    </>
   );
 };
 
@@ -39,23 +46,30 @@ const SelectInput = ({
   value,
   path,
   onChange,
+  required,
 }: {
   value: string | undefined;
   path: string;
   onChange: (path: string, value: string) => void;
+  required: boolean;
 }) => {
+  const requiredClass = required && !value ? "required" : "";
   return (
-    <select
-      onChange={(evt) => {
-        const { value } = evt.target;
-        onChange(path, value);
-      }}
-      value={value ?? options[0].value}
-    >
-      {options.map((option) => (
-        <option key={option.value}>{option.display}</option>
-      ))}
-    </select>
+    <>
+      <select
+        className={requiredClass}
+        onChange={(evt) => {
+          const { value } = evt.target;
+          onChange(path, value);
+        }}
+        value={value ?? options[0].value}
+      >
+        {options.map((option) => (
+          <option key={option.value}>{option.display}</option>
+        ))}
+      </select>
+      {required && <span>REQUIRED</span>}
+    </>
   );
 };
 
@@ -67,18 +81,24 @@ export const Form = ({
   // bind onChange with context provider
   // get value from context provider
   // get required from context provider
-  const { formValues, onChange: onChangeHandler } = useFormContext();
+  const {
+    formValues,
+    requireState,
+    onChange: onChangeHandler,
+  } = useFormContext();
   return (
     <div>
       <h1>Form</h1>
       <div>
         {formDefinitions.map((def) => {
+          const isRequired = requireState[def.path];
           return (
             <div key={def.path}>
               <InputRenderer
                 definition={def}
                 value={formValues[def.path]}
                 onChange={onChangeHandler}
+                isRequired={isRequired}
               />
             </div>
           );
@@ -91,18 +111,30 @@ export const Form = ({
 const InputRenderer = ({
   definition,
   value,
+  isRequired = false,
   onChange,
 }: {
   definition: FormDefinition;
   value: string | undefined;
+  isRequired: boolean;
   onChange: (path: string, value: string) => void;
 }) => {
   if (definition.type == "text")
     return (
-      <TextInput path={definition.path} value={value} onChange={onChange} />
+      <TextInput
+        path={definition.path}
+        value={value}
+        onChange={onChange}
+        required={isRequired}
+      />
     );
 
   return (
-    <SelectInput path={definition.path} value={value} onChange={onChange} />
+    <SelectInput
+      path={definition.path}
+      value={value}
+      onChange={onChange}
+      required={isRequired}
+    />
   );
 };
