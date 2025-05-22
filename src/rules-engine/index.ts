@@ -1,6 +1,7 @@
 // *Definitions are db/backend types, stored at rest
 // this is the input field that the rule applies to
 export type SubjectDefinition = {
+  type: "subject";
   id: string; // ids sole purpose is to link fields together and act as a key in the db. These are UUIDs
   path: string; // key of the subject input field. This is used in the frontend when resolving the rule
 };
@@ -41,20 +42,28 @@ export type InDefinition = {
   negation: boolean;
 };
 
+export type RuleDefinition =
+  | SubjectDefinition
+  | AndDefinition
+  | OrDefinition
+  | EqualsDefinition
+  | ComparisonDefinition
+  | InDefinition;
+
 // these are runtime types, hydrated on the client
 export type Subject = {
   id: string;
   path: string;
   predicate: Predicate;
 };
-type Predicate =
+export type Predicate =
   | And
   | Or
   | EqualsDefinition
   | ComparisonDefinition
   | InDefinition;
-type And = AndDefinition & { predicates: Predicate[] };
-type Or = OrDefinition & { predicates: Predicate[] };
+export type And = AndDefinition & { predicates: Predicate[] };
+export type Or = OrDefinition & { predicates: Predicate[] };
 
 const subject: Subject = {
   id: "subj",
