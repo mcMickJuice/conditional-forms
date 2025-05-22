@@ -1,3 +1,4 @@
+// Definitions are db/backend types, stored at rest
 export type TextInputDefinition = {
   type: "text";
   path: string;
@@ -7,7 +8,7 @@ export type SelectInputDefinition = {
   path: string;
 };
 export type FormDefinition = TextInputDefinition | SelectInputDefinition;
-// *Definitions are db/backend types, stored at rest
+
 // this is the input field that the rule applies to
 export type SubjectDefinition = {
   type: "subject";
@@ -60,6 +61,7 @@ export type RuleDefinition =
   | InDefinition;
 
 // these are runtime types, hydrated on the client
+// see mapDefinitionToRuntimeRules for how this is done
 export type Subject = {
   id: string;
   path: string;

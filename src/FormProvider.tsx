@@ -25,14 +25,16 @@ export const FormContextProvider = ({
   const subjectRules = useMemo(() => {
     return mapDefinitionToRuntimeRules(rules);
   }, [rules]);
-  console.log(subjectRules);
 
   const onChangeHandler = useMemo(() => {
     return (path: string, value: string) => {
       setFormState((state) => {
         const newFormValues = { ...state.formValues };
+        // on change, update form value at updated path
         newFormValues[path] = value;
-        // calculate require state looking at all definitions bumped against form state
+
+        // we'll need to recalculate the required state for the entire form. We'll do this by iterating
+        // through formDefinitions, finding subjectRules if they exist, and pass rules into rules engine
         const newRequireState: Record<string, boolean> = {};
         formDefinitions.forEach((def) => {
           const subjectRule = subjectRules.find(
@@ -43,11 +45,11 @@ export const FormContextProvider = ({
             newRequireState[def.path] = result;
           }
         });
+        // both the formValues and requireState are held in client state, and are accessed in the Form component
         return { formValues: newFormValues, requireState: newRequireState };
       });
     };
   }, [setFormState, subjectRules, formDefinitions]);
-  console.log(formState);
   return (
     <FormContext.Provider
       value={{

@@ -80,9 +80,6 @@ export const Form = ({
 }: {
   formDefinitions: FormDefinition[];
 }) => {
-  // bind onChange with context provider
-  // get value from context provider
-  // get required from context provider
   const {
     formValues,
     requireState,
@@ -91,6 +88,8 @@ export const Form = ({
   return (
     <div>
       {formDefinitions.map((def) => {
+        // when rendering each input from form definitions, lookup the requiredState by path
+        // this state is set in the onChange handler in FormContextProvider
         const isRequired = requireState[def.path];
         return (
           <div key={def.path}>
@@ -118,6 +117,7 @@ const InputRenderer = ({
   isRequired: boolean;
   onChange: (path: string, value: string) => void;
 }) => {
+  // inputs don't know nor do they care where required comes from, as it's just passed as a prop
   if (definition.type == "text")
     return (
       <TextInput
