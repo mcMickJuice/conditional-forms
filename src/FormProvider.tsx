@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo, useState } from "react";
 import type { FormDefinition, RuleDefinition } from "./types";
-import { mapDefinitionToRuntimeRules, processRulesForSubject } from ".";
+import { mapDefinitionToRuntimeRules, processRulesForSubject } from "./rules";
 
 type FormContextValue = {
   formValues: Record<string, string>;
